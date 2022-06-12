@@ -4,9 +4,10 @@ const idiomsLen = idioms.length;
 
 $('#chinese-btn').click(() => {
     const query = $("#chinese-text")[0].value;
+    const regularExpression = eval(`/${query}/`);
     $("#answer").empty();
     for(let i = 0; i < idiomsLen; i++) {
-        if(idioms[i].includes(query)) {
+        if(regularExpression.test(idioms[i])) {
             $("#answer").append(`<div>${idioms[i]}</div>`);
         }
     }
