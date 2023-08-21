@@ -16,26 +16,82 @@
         <textarea id="chinese-text"></textarea>
         <pre>
     当前是通配符模式 - 你可以使用#表示一个汉字, 用*表示多个汉字 例如 #士林 可以匹配到凡士林 十年*人能匹配到十年树木百年树人
+    大括号{}描述了一个汉字的特性，可以使用&连接多个集合, 当前支持:
+            z: 表示组词，z#士林 表示这个字和士林能够组成词例如：
+                {z黑#&z#术}{z#球&z#术} 表示第一个字能和黑和术组词， 第二个字能和球和术组词并且这两个字成单词的词，您将匹配到枪手
         </pre>
         <button id="chinese-btn">查询</button>
         <script src='./out.js'></script>
         <script>
-            const words = ws.split('\n');
-            $('#chinese-btn').click(()=>{
-                const getRegex = (pattern) => {
-                    const regexStr = '/^' + pattern.replaceAll('#', '.').replaceAll('*', '.*') + '$/';
-                    return eval(regexStr);
+const words = ws.split('\n');
+$('#chinese-btn').click(()=>{
+    const getRegex = (pattern) => {
+        const getSet = (content) => {
+            const sets = content.split('&');
+            let result = [];
+            let initFlag = true;
+            for(const s of sets) {
+                switch(s[0]){
+                    case 'z':
+                        const pa = s.substring(1);
+                        const pos = pa.indexOf('#');
+                        const _regex = getRegex(pa);
+                        const ret = [];
+                        for(const w of words) {
+                            if(_regex.test(w)) {
+                                ret.push(w[pos]);
+                            }
+                        }
+                        if(initFlag) {
+                            initFlag = false;
+                            result = ret;
+                        } else {
+                            result = result.filter(value => ret.includes(value));
+                        }
+                        break;
                 }
-                const pattern = $('#chinese-text').val();
-                const regex = getRegex(pattern);
-                answer = "";
-                $('#answer').html("");
-                for(const w of words) {
-                    if(regex.test(w)) {
-                        $('#answer').append(`<div>${w}</div>`);
-                    }
+            }
+            return '(' + result.join('|') + ')';
+        }
+        let regex = '';
+        const len = pattern.length;
+        for(let i = 0; i < len; i++) {
+            const c = pattern[i];
+            if(pattern[i] == '{') {
+                const end = pattern.indexOf('}', i);
+                const content = pattern.substring(i+1, end);
+                const sets = getSet(content);
+                i = end;
+                regex += sets;
+            } else if(c === '#') {
+                if(pattern[i+1] == '{') {
+                    const end = pattern.indexOf('}', i);
+                    const content = pattern.substring(i+2, end);
+                    const sets = getSet(content);
+                    i = end;
+                    regex += '.{' + num + '}';
+                } else {
+                    regex += '.';
                 }
-            })
+            } else if(c === '*') {
+                regex += '.*';
+            } else {
+                regex += c;
+            }
+        }
+        const regexStr = '/^' + regex + '$/';
+        return eval(regexStr);
+    }
+    const pattern = $('#chinese-text').val();
+    const regex = getRegex(pattern);
+    answer = "";
+    $('#answer').html("");
+    for(const w of words) {
+        if(regex.test(w)) {
+            $('#answer').append(`<div>${w}</div>`);
+        }
+    }
+})
         </script>
         <div id="answer"></div>
     </body>
