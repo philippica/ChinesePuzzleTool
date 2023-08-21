@@ -19,11 +19,40 @@
     大括号{}描述了一个汉字的特性，可以使用&连接多个集合, 当前支持:
             z: 表示组词，z#士林 表示这个字和士林能够组成词例如：
                 {z黑#&z#术}{z#球&z#术} 表示第一个字能和黑和术组词， 第二个字能和球和术组词并且这两个字成单词的词，您将匹配到枪手
+            b: 表示部件，b品表示这个字包含品这个部件，例如：
+                {b品木&z体#}{b土&z#合} 表示这个词语第一个字包含品还有木两个部件并且能够和'体'组词，第二个字包含土这个部件并且能和合组词，您将匹配到操场
         </pre>
         <button id="chinese-btn">查询</button>
         <script src='./out.js'></script>
+        <script src='./factorHan.js'></script>
         <script>
 const words = ws.split('\n');
+const hans = hanzi.split('\n');
+const han = {};
+const conponent = {};
+const conponentRev = {};
+for(const char of hans) {
+    han[char[0]] = char.substring(2).split('|');
+    conponent[char[0]] = [];
+    conponentRev[char[0]] = [];
+}
+
+const dfs = (zi, depth, root) => {
+    conponent[root].push(zi);
+    if(!conponentRev[zi])conponentRev[zi] = [root];else conponentRev[zi].push(root);
+    const children = han[zi][0];
+    for(const child of children) {
+        if(!han[child]) {
+            continue;
+        }
+        dfs(child, depth+1, root);
+    }
+}
+
+for(const zi in han) {
+    dfs(zi, 0, zi);
+}
+
 $('#chinese-btn').click(()=>{
     const getRegex = (pattern) => {
         const getSet = (content) => {
@@ -31,9 +60,9 @@ $('#chinese-btn').click(()=>{
             let result = [];
             let initFlag = true;
             for(const s of sets) {
+                const pa = s.substring(1);
                 switch(s[0]){
                     case 'z':
-                        const pa = s.substring(1);
                         const pos = pa.indexOf('#');
                         const _regex = getRegex(pa);
                         const ret = [];
@@ -49,6 +78,15 @@ $('#chinese-btn').click(()=>{
                             result = result.filter(value => ret.includes(value));
                         }
                         break;
+                    case 'b':
+                        for(const c of pa) {
+                            if(initFlag) {
+                                initFlag = false;
+                                result = conponentRev[c];
+                            } else {
+                                result = result.filter(value => conponentRev[c].includes(value));
+                            }
+                        }
                 }
             }
             return '(' + result.join('|') + ')';
