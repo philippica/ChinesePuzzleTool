@@ -110,15 +110,7 @@ $('#chinese-btn').click(()=>{
                 i = end;
                 regex += sets;
             } else if(c === '#') {
-                if(pattern[i+1] == '{') {
-                    const end = pattern.indexOf('}', i);
-                    const content = pattern.substring(i+2, end);
-                    const sets = getSet(content);
-                    i = end;
-                    regex += '.{' + num + '}';
-                } else {
-                    regex += '.';
-                }
+                regex += '.';
             } else if(c === '*') {
                 regex += '.*';
             } else {
