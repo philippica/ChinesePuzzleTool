@@ -40,6 +40,7 @@ const han = {};
 const conponent = {};
 const conponentRev = {};
 for(const char of hans) {
+    words.push(char[0]);
     han[char[0]] = char.substring(2).split('|');
     conponent[char[0]] = [];
     conponentRev[char[0]] = [];
