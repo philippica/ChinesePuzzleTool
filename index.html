@@ -2,9 +2,21 @@
     <head>
         <meta http-equiv="Content-Type"content="text/html;charset=utf-8"/>
         <script charset="utf-8" src="https://lib.sinaapp.com/js/jquery/1.6/jquery.min.js"></script>
+        <style>
+            pre{
+                font-size: 12px;
+                color: #adabab;
+                background-color: unset;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+        </style>
     </head>
     <body>
         <textarea id="chinese-text"></textarea>
+        <pre>
+    当前是通配符模式 - 你可以使用#表示一个汉字, 用*表示多个汉字 例如 #士林 可以匹配到凡士林 十年*人能匹配到十年树木百年树人
+        </pre>
         <button id="chinese-btn">查询</button>
         <script src='./out.js'></script>
         <script>
