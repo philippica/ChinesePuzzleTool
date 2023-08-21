@@ -6,7 +6,23 @@
     <body>
         <textarea id="chinese-text"></textarea>
         <button id="chinese-btn">查询</button>
-        <script src='./chinese.js'></script>
+        <script src='./out.js'></script>
+        <script>
+            const words = ws.split('\n');
+            $('#chinese-btn').click(()=>{
+                const getRegex = (pattern) => {
+                    const regexStr = '/^' + pattern.replaceAll('#', '.').replaceAll('*', '.*') + '$/';
+                    return eval(regexStr);
+                }
+                const pattern = $('#chinese-text').val();
+                const regex = getRegex(pattern);
+                for(const w of words) {
+                    if(regex.test(w)) {
+                        console.info(w);
+                    }
+                }
+            })
+        </script>
         <div id="answer"></div>
     </body>
 
