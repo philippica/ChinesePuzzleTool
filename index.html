@@ -16,9 +16,11 @@
                 }
                 const pattern = $('#chinese-text').val();
                 const regex = getRegex(pattern);
+                answer = "";
+                $('#answer').html("");
                 for(const w of words) {
                     if(regex.test(w)) {
-                        console.info(w);
+                        $('#answer').append(`<div>${w}</div>`);
                     }
                 }
             })
