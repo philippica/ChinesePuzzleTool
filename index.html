@@ -112,11 +112,11 @@ $('#chinese-btn').click(()=>{
                         break;
                     case 'h':
                         const num = parseInt(pa);
-                        result = '(' + ord[num].join('|') + ')';
+                        result = ord[num];
                         break;
                 }
             }
-            return '(' + result + ')';
+            return '(' + result.join('|') + ')';
         }
         let regex = '';
         const len = pattern.length;
