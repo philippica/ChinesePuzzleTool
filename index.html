@@ -23,12 +23,16 @@
         </div>
         <textarea id="chinese-text" placeholder="请输入想要查询的模式"></textarea>
         <pre>
+注意：本工具的内容均收集整理自互联网，并不权威专业
 当前是通配符模式 - 你可以使用#表示一个汉字, 用*表示多个汉字 例如 #士林 可以匹配到凡士林 十年*人能匹配到十年树木百年树人
 大括号{}描述了一个汉字的特性，可以使用&连接多个集合, 当前支持:
         z: 表示组词，z#士林 表示这个字和士林能够组成词例如：
             {z黑#&z#术}{z#球&z#术} 表示第一个字能和黑和术组词， 第二个字能和球和术组词并且这两个字成单词的词，您将匹配到枪手
-        b: 表示部件，b品表示这个字包含品这个部件，例如：
+        b: 表示部件，例如b品表示这个字包含品这个部件，例如：
             {b品木&z体#}{b土&z#合} 表示这个词语第一个字包含品还有木两个部件并且能够和'体'组词，第二个字包含土这个部件并且能和合组词，您将匹配到操场
+        h: 表示笔画，例如h3表示这个字的笔画数是3，例如：
+            {h4}{h5}{h10}{h14} 表示这个词语第一个字有4笔第二个字有5笔以此类推，您将匹配到 风平浪静
+
         </pre>
         <button id="chinese-btn">查询</button>
         <script src='./out.js'></script>
@@ -46,20 +50,29 @@ for(const char of hans) {
     conponentRev[char[0]] = [];
 }
 
+let ord = [];
+let order = [];
 const dfs = (zi, depth, root) => {
     conponent[root].push(zi);
+    if(!han[zi]) {
+        order.push(zi);
+        return;
+    }
     if(!conponentRev[zi])conponentRev[zi] = [root];else conponentRev[zi].push(root);
     const children = han[zi][0];
     for(const child of children) {
-        if(!han[child]) {
-            continue;
-        }
         dfs(child, depth+1, root);
+    }
+    if(children.length === 0) {
+        order.push(zi);
     }
 }
 
+for(let i = 0; i <= 30; i++)ord.push([]);
 for(const zi in han) {
+    order = [];
     dfs(zi, 0, zi);
+    ord[order.length].push(zi);
 }
 
 $('#chinese-btn').click(()=>{
@@ -96,9 +109,14 @@ $('#chinese-btn').click(()=>{
                                 result = result.filter(value => conponentRev[c].includes(value));
                             }
                         }
+                        break;
+                    case 'h':
+                        const num = parseInt(pa);
+                        result = '(' + ord[num].join('|') + ')';
+                        break;
                 }
             }
-            return '(' + result.join('|') + ')';
+            return '(' + result + ')';
         }
         let regex = '';
         const len = pattern.length;

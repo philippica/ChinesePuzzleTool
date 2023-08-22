@@ -1,4 +1,6 @@
-const hanzi=`丁|一亅
+const hanzi=`一
+乙
+丁|一亅
 七|一乚
 万|一𠃌丿
 丈|一乂
