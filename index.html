@@ -15,6 +15,9 @@
                 margin-top: 20px;
                 width: 800px;
             }
+            td {
+                padding-right: 2px;
+            }
         </style>
     </head>
     <body>
@@ -32,6 +35,119 @@
             {b品木&z体#}{b土&z#合} 表示这个词语第一个字包含品还有木两个部件并且能够和'体'组词，第二个字包含土这个部件并且能和合组词，您将匹配到操场
         h: 表示笔画，例如h3表示这个字的笔画数是3，例如：
             {h4}{h5}{h10}{h14} 表示这个词语第一个字有4笔第二个字有5笔以此类推，您将匹配到 风平浪静
+
+        </pre>
+
+        <pre>
+常用笔画: 
+<table>
+<tr>
+    <td><b>笔画</b></td>
+    <td></td>
+    <td>一</td>
+    <td>丨</td>
+    <td>丶</td>
+    <td>丿</td>
+    <td>㇏</td>
+    <td>亅</td>
+    <td>𠄌</td>
+    <td>㇀</td>
+    <td>㇂</td>
+    <td>乙</td>
+    <td>㇇</td>
+    <td>㇉</td>
+    <td>㇊</td>
+    <td>𠃌</td>
+    <td>𠃍</td>
+    <td>⺄</td>
+    <td>𠃋</td>
+
+</tr>
+<tr>
+    <td><b>中文名称</b></td>
+    <td></td>
+    <td>横</td>
+    <td>竖</td>
+    <td>点</td>
+    <td>撇</td>
+    <td>捺</td>
+    <td>竖钩</td>
+    <td>竖提</td>
+    <td>提</td>
+    <td>斜钩</td>
+    <td>横折弯钩</td>
+    <td>横撇</td>
+    <td>竖折弯钩</td>
+    <td>横折提</td>
+    <td>横折钩</td>
+    <td>横折</td>
+    <td>横斜钩</td>
+    <td>撇折</td>
+
+</tr>
+</table>
+            
+常用部首: 
+<table>
+<tr>
+    <td><b>部首</b></td>
+    <td></td>
+    <td>亻</td>
+    <td>彳</td>
+    <td>艹</td>
+    <td>纟</td>
+    <td>阝</td>
+    <td>饣</td>
+    <td>卩</td>
+    <td>氵</td>
+    <td>冫</td>
+    <td>冖</td>
+    <td>宀</td>
+    <td>刂</td>
+    <td>廴</td>
+    <td>辶</td>
+    <td>亠</td>
+    <td>灬</td>
+    <td>扌</td>
+    <td>犭</td>
+    <td>忄</td>
+    <td>讠</td>
+    <td>饣</td>
+    <td>疒</td>
+    <td>夂</td>
+
+
+</tr>
+<tr>
+    <td><b>中文名称</b></td>
+    <td></td>
+    <td>单人旁</td>
+    <td>双人旁</td>
+    <td>草字头</td>
+    <td>绞丝旁</td>
+    <td>软耳旁</td>
+    <td>食字旁</td>
+    <td>硬耳旁</td>
+    <td>三点水</td>
+    <td>两点水</td>
+    <td>秃宝盖</td>
+    <td>宝盖头</td>
+    <td>立刀旁</td>
+    <td>建字底</td>
+    <td>走之底</td>
+    <td>京字头</td>
+    <td>四点底</td>
+    <td>提手旁</td>
+    <td>反犬旁</td>
+    <td>竖心旁</td>
+    <td>言字旁</td>
+    <td>食字旁</td>
+    <td>病字头</td>
+
+    <td>冬</td>
+
+</tr>
+</table>
 
         </pre>
         <button id="chinese-btn">查询</button>
@@ -106,7 +222,10 @@ $('#chinese-btn').click(()=>{
                                 initFlag = false;
                                 result = conponentRev[c];
                             } else {
-                                result = result.filter(value => conponentRev[c].includes(value));
+                                result = result.filter(
+                                    value => 
+                                        conponentRev[c].includes(value)
+                                );
                             }
                         }
                         break;
