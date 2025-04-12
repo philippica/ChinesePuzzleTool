@@ -1,0 +1,26 @@
+<html>
+<head>
+    <title>焖肉面分面-汉字笔画首尾</title>
+    <meta charset="utf-8">
+    <script src="./output.js"></script>
+    <style>
+        canvas{
+            border: 3px solid black;
+        }
+    </style>
+</head>
+<body>
+    <div>请在下方画布中点击输入汉字笔画的首尾</div>
+    <canvas id="canvas" width="1000" height="1000"></canvas>
+    <button onclick="handle()">扫描</button>
+    <div id="ans"></div>
+    <script>
+
+const km=(t,e,l)=>{let $,n=Array(100).fill(1073741824),o=Array(100).fill(0),i=Array(100).fill(0),r=Array(100).fill(0);Array(100).fill(!1);let s=Array(100).fill(!1);function f(l){let f,c=0,_=0,a;for(o.fill(0),n.fill(1073741824),$[c]=l;;){f=$[c],a=1073741824,s[c]=!0;for(let h=1;h<=e;h++)!s[h]&&(n[h]>i[f]+r[h]-t[f][h]&&(n[h]=i[f]+r[h]-t[f][h],o[h]=c),n[h]<a&&(a=n[h],_=h));for(let p=0;p<=e;p++)s[p]?(i[$[p]]-=a,r[p]+=a):n[p]-=a;if(-1===$[c=_])break}for(;c;)$[c]=$[o[c]],c=o[c]}function c(){$=[];for(let l=0;l<=e;l++)$.push(-1);i.fill(0),r.fill(0);for(let n=1;n<=e;n++)s.fill(!1),f(n);let o=0,c=0;for(let _=1;_<=e;_++)-1!==$[_]&&(o+=t[$[_]][_],c=Math.max(c,-t[$[_]][_]));return{ret:o,maxOffset:c}}function _(){let t=c();return t.matched=$,t}return _()},canvas=document.getElementById("canvas"),ctx=canvas.getContext("2d");let points=[];canvas.onclick=function(t){let e=canvas.getBoundingClientRect(),l=t.clientX-e.left,$=t.clientY-e.top;points.push({x:l,y:$}),ctx.beginPath(),ctx.fillStyle="red",ctx.arc(l,$,5,0,2*Math.PI),ctx.fill(),ctx.closePath()};const compare=(t,e)=>{if(t.length!==e.length)return{score:-1,match:{}};let l=0,$=[[]];for(let n=0;n<t.length;n++){$.push([0]);for(let o=0;o<e.length;o++){let i=t[n].x-e[o].x,r=t[n].y-e[o].y,s=-Math.sqrt(i*i+r*r);$[n+1].push(s)}}let f=km($,t.length,e.length);return l=5e4+f.ret,l-=f.maxOffset,{score:l,match:f}};function handle(){let t=points[0].x,e=points[0].y,l=points[0].x,$=points[0].y;for(let n=1;n<points.length;n++)l=Math.max(l,points[n].x),$=Math.max($,points[n].y),t=Math.min(t,points[n].x),e=Math.min(e,points[n].y);for(let o=0;o<points.length;o++)points[o].x=(points[o].x-t)*999/(l-t),points[o].y=(points[o].y-e)*999/($-e);let i=[];for(let r in hanzi){let s=hanzi[r],f=[];for(let c of s){let _=c%1e6,a=Math.floor(_/1e3),h=_%1e3,p=Math.floor(c/1e6),x=Math.floor(p/1e3),m=p%1e3;f.push({x:x,y:m}),f.push({x:a,y:h})}let u=compare(points,f),g=u.score;i.length<10?(i.push({han:r,score:g,match:u.match}),i.sort((t,e)=>t.score-e.score)):g>i[0].score&&(i[0]={han:r,score:g,match:u.match},i.sort((t,e)=>t.score-e.score))}let y="";for(let d=i.length-1;d>=0;d--)y+=i[d].han+"<br>";document.getElementById("ans").innerHTML=y}
+
+
+
+        
+    </script>
+</body>
+</html>
