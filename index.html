@@ -24,7 +24,7 @@
         <div>
             <a href="https://philippica.github.io/cipher_machine">焖肉面原版</a>
         </div>
-        <textarea id="chinese-text" placeholder="请输入想要查询的模式"></textarea>
+        <textarea id="chinese-text" placeholder="请输入想要查询的模式(按回车Enter查询)"></textarea>
         <pre>
 注意：本工具的内容均收集整理自互联网，并不权威专业
 当前是通配符模式 - 你可以使用#表示一个汉字, 用*表示多个汉字 例如 #士林 可以匹配到凡士林 十年*人能匹配到十年树木百年树人
@@ -191,7 +191,7 @@ for(const zi in han) {
     ord[order.length].push(zi);
 }
 
-$('#chinese-btn').click(()=>{
+const search = () => {
     const getRegex = (pattern) => {
         const getSet = (content) => {
             const sets = content.split('&');
@@ -258,7 +258,8 @@ $('#chinese-btn').click(()=>{
         const regexStr = '/^' + regex + '$/';
         return eval(regexStr);
     }
-    const pattern = $('#chinese-text').val();
+    const pattern = $('#chinese-text').val().replace(/[\r\n]/g, '');
+    $('#chinese-text').val(pattern);
     const regex = getRegex(pattern);
     answer = "";
     $('#answer').html("");
@@ -267,7 +268,13 @@ $('#chinese-btn').click(()=>{
             $('#answer').append(`<div>${w}</div>`);
         }
     }
-})
+};
+
+$('#chinese-btn').click(()=>search());
+$('#chinese-text').keydown((e) => {if(e.keyCode === 13) {search();}});
+
+
+
         </script>
         <div id="answer"></div>
     </body>
