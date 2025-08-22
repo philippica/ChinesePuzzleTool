@@ -21,6 +21,7 @@
         textarea {
             margin-top: 20px;
             width: 800px;
+            font-family: 'Consolas', 微软雅黑;
         }
 
         code {
@@ -28,7 +29,7 @@
             padding: 2px 2px;
             margin: 2px 2px;
             border-radius: 4px;
-            font-family: 'Consolas', 'Monaco', monospace;
+            font-family: 'Consolas', 微软雅黑;
             font-size: 0.9em;
             color: #777;
         }
@@ -57,9 +58,11 @@
             <code>{h4}{h5}{h10}{h14}</code>表示这个词语第一个字有4笔第二个字有5笔以此类推，您将匹配到<code>风平浪静</code>
         t: 表示相同汉字，相同字母匹配相同的汉字。只有第一个字的附加特性才会生效。例如：
             <code>{tA}{tA}{tB}{tB}</code>匹配所有AABB式词语
-
+        p: 表示拼音，拼音的格式为拼音+音调数字（0-4），支持正则表达式匹配。多音字会包括其所有可能的拼音，而不根据其所在的词语。例如：
+            <code>{pshan3}电</code>匹配<code>闪电</code>；<code>{p.+u\d}{p.+ian\d}网</code>表示第一个字韵母为<code>u</code>，第二个字韵母为<code>ian</code>，第三个字为<code>网</code>的词语，您将匹配到<code>互联网</code>
+        
+最后更新：2025-08-22  
         </pre>
-
     <pre id="table">
 常用笔画: 
 <table>
@@ -167,6 +170,7 @@
     <button id="chinese-btn">查询</button>
     <script src='./out.js'></script>
     <script src='./factorHan.js'></script>
+    <script src='./spell.js'></script>
     <script>
         const words = ws.split('\n');
         const hans = hanzi.split('\n');
@@ -179,6 +183,13 @@
             han[char[0]] = char.substring(2).split('|');
             conponent[char[0]] = [];
             conponentRev[char[0]] = [];
+        }
+
+        for (const key of Object.keys(spell)) {
+            const toneIdx = spell[key].split(':');
+            delete spell[key];
+            for (const i in "11111") spell[key + i] = [];
+            for (const idx in toneIdx[1]) if (idx % 2) spell[key + toneIdx[1][idx] % 5].push(toneIdx[1].charAt(idx - 1));
         }
 
         let ord = [];
@@ -258,6 +269,20 @@
                             case 't':
                                 id = pa;
                                 break;
+                            case 'p':
+                                const pinyin = Object.keys(spell);
+                                const pet = [];
+                                for (const p of pinyin) {
+                                    if (new RegExp(pa).test(p)) {
+                                        spell[p].forEach(v => { pet.push(v); });
+                                    }
+                                }
+                                if (initFlag) {
+                                    initFlag = false;
+                                    result = pet;
+                                } else {
+                                    result = result.filter(value => pet.includes(value));
+                                }
                         }
                     }
                     if (id) {
