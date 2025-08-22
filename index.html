@@ -1,44 +1,66 @@
 <html>
-    <head>
-        <meta http-equiv="Content-Type"content="text/html;charset=utf-8"/>
-        <title>焖肉面中文版</title>
-        <script charset="utf-8" src="./jquery.min.js"></script>
-        <style>
-            pre{
-                font-size: 12px;
-                color: #adabab;
-                background-color: unset;
-                border: 1px solid #ccc;
-                border-radius: 4px;
-            }
-            textarea {
-                margin-top: 20px;
-                width: 800px;
-            }
-            td {
-                padding-right: 2px;
-            }
-        </style>
-    </head>
-    <body>
-        <div>
-            <a href="https://philippica.github.io/cipher_machine">焖肉面原版</a>
-        </div>
-        <textarea id="chinese-text" placeholder="请输入想要查询的模式(按回车Enter查询)"></textarea>
-        <pre>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <title>焖肉面中文版</title>
+    <script charset="utf-8" src="./jquery.min.js"></script>
+    <style>
+        * {
+            font-family: 微软雅黑;
+        }
+
+        pre {
+            padding: 6px 6px;
+            font-size: 12px;
+            color: #adabab;
+            background-color: unset;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        textarea {
+            margin-top: 20px;
+            width: 800px;
+        }
+
+        code {
+            background: #e5e7eb;
+            padding: 2px 2px;
+            margin: 2px 2px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+            color: #777;
+        }
+
+        td {
+            padding-right: 2px;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <a href="https://philippica.github.io/cipher_machine">焖肉面原版</a>
+        <button id="toggle"> 点击收起提示 </button>
+    </div>
+    <textarea id="chinese-text" placeholder="请输入想要查询的模式(按回车Enter查询)"></textarea>
+    <pre id="hint">
 注意：本工具的内容均收集整理自互联网，并不权威专业
-当前是通配符模式 - 你可以使用#表示一个汉字, 用*表示多个汉字 例如 #士林 可以匹配到凡士林 十年*人能匹配到十年树木百年树人
-大括号{}描述了一个汉字的特性，可以使用&连接多个集合, 当前支持:
-        z: 表示组词，z#士林 表示这个字和士林能够组成词例如：
-            {z黑#&z#术}{z#球&z#术} 表示第一个字能和黑和术组词， 第二个字能和球和术组词并且这两个字成单词的词，您将匹配到枪手
-        b: 表示部件，例如b品表示这个字包含品这个部件，例如：
-            {b品木&z体#}{b土&z#合} 表示这个词语第一个字包含品还有木两个部件并且能够和'体'组词，第二个字包含土这个部件并且能和合组词，您将匹配到操场
-        h: 表示笔画，例如h3表示这个字的笔画数是3，例如：
-            {h4}{h5}{h10}{h14} 表示这个词语第一个字有4笔第二个字有5笔以此类推，您将匹配到 风平浪静
+当前是通配符模式 - 你可以使用<code>#</code>表示一个汉字, 用<code>*</code>表示多个汉字 例如<code>#士林</code>可以匹配到<code>凡士林</code>；<code>十年*人</code>能匹配到<code>十年树木百年树人</code>
+大括号<code>{}</code>描述了一个汉字的特性，可以使用<code></code>&连接多个集合, 当前支持:
+        z: 表示组词，<code>{z#士林}</code>表示这个字和<code>士林</code>能够组成词例如：
+            <code>{z黑#&z#术}{z#球&z#术}</code>表示第一个字能与<code>黑</code>和<code>术</code>组词， 第二个字能与<code>球</code>和<code>术</code>组词并且这两个字成单词的词，您将匹配到<code>枪手</code>
+        b: 表示部件，例如<code>{b品}</code>表示这个字包含<code>品</code>这个部件，例如：
+            <code>{b品木&z体#}{b土&z#合}</code>表示这个词语第一个字包含<code>品</code>还有<code>木</code>两个部件并且能够与<code>体</code>组词，第二个字包含<code>土</code>这个部件并且能与<code>合</code>组词，您将匹配到<code>操场</code>
+        h: 表示笔画，例如<code>{h3}</code>表示这个字的笔画数是3，例如：
+            <code>{h4}{h5}{h10}{h14}</code>表示这个词语第一个字有4笔第二个字有5笔以此类推，您将匹配到<code>风平浪静</code>
+        t: 表示相同汉字，相同字母匹配相同的汉字。只有第一个字的附加特性才会生效。例如：
+            <code>{tA}{tA}{tB}{tB}</code>匹配所有AABB式词语
 
         </pre>
 
-        <pre>
+    <pre id="table">
 常用笔画: 
 <table>
 <tr>
@@ -61,7 +83,6 @@
     <td>𠃍</td>
     <td>⺄</td>
     <td>𠃋</td>
-
 </tr>
 <tr>
     <td><b>中文名称</b></td>
@@ -83,7 +104,6 @@
     <td>横折</td>
     <td>横斜钩</td>
     <td>撇折</td>
-
 </tr>
 </table>
             
@@ -114,8 +134,6 @@
     <td>饣</td>
     <td>疒</td>
     <td>夂</td>
-
-
 </tr>
 <tr>
     <td><b>中文名称</b></td>
@@ -141,140 +159,176 @@
     <td>言字旁</td>
     <td>食字旁</td>
     <td>病字头</td>
-
     <td>冬</td>
-
 </tr>
 </table>
-
         </pre>
-        <button id="chinese-btn">查询</button>
-        <script src='./out.js'></script>
-        <script src='./factorHan.js'></script>
-        <script>
-const words = ws.split('\n');
-const hans = hanzi.split('\n');
-const han = {};
-const conponent = {};
-const conponentRev = {};
-for(const char of hans) {
-    words.push(char[0]);
-    han[char[0]] = char.substring(2).split('|');
-    conponent[char[0]] = [];
-    conponentRev[char[0]] = [];
-}
+    <br>
+    <button id="chinese-btn">查询</button>
+    <script src='./out.js'></script>
+    <script src='./factorHan.js'></script>
+    <script>
+        const words = ws.split('\n');
+        const hans = hanzi.split('\n');
+        const han = {};
+        const conponent = {};
+        const conponentRev = {};
 
-let ord = [];
-let order = [];
-const dfs = (zi, depth, root) => {
-    conponent[root].push(zi);
-    if(!han[zi]) {
-        order.push(zi);
-        return;
-    }
-    if(!conponentRev[zi])conponentRev[zi] = [root];else conponentRev[zi].push(root);
-    const children = han[zi][0];
-    for(const child of children) {
-        dfs(child, depth+1, root);
-    }
-    if(children.length === 0) {
-        order.push(zi);
-    }
-}
+        for (const char of hans) {
+            words.push(char[0]);
+            han[char[0]] = char.substring(2).split('|');
+            conponent[char[0]] = [];
+            conponentRev[char[0]] = [];
+        }
 
-for(let i = 0; i <= 30; i++)ord.push([]);
-for(const zi in han) {
-    order = [];
-    dfs(zi, 0, zi);
-    ord[order.length].push(zi);
-}
+        let ord = [];
+        let order = [];
+        const dfs = (zi, depth, root) => {
+            conponent[root].push(zi);
+            if (!han[zi]) {
+                order.push(zi);
+                return;
+            }
+            if (!conponentRev[zi]) conponentRev[zi] = [root]; else conponentRev[zi].push(root);
+            const children = han[zi][0];
+            for (const child of children) {
+                dfs(child, depth + 1, root);
+            }
+            if (children.length === 0) {
+                order.push(zi);
+            }
+        }
 
-const search = () => {
-    const getRegex = (pattern) => {
-        const getSet = (content) => {
-            const sets = content.split('&');
-            let result = [];
-            let initFlag = true;
-            for(const s of sets) {
-                const pa = s.substring(1);
-                switch(s[0]){
-                    case 'z':
-                        const pos = pa.indexOf('#');
-                        const _regex = getRegex(pa);
-                        const ret = [];
-                        for(const w of words) {
-                            if(_regex.test(w)) {
-                                ret.push(w[pos]);
-                            }
+        for (let i = 0; i <= 30; i++)ord.push([]);
+        for (const zi in han) {
+            order = [];
+            dfs(zi, 0, zi);
+            ord[order.length].push(zi);
+        }
+
+        const search = () => {
+            const getRegex = (pattern) => {
+                const usedID = [];
+                const getSet = (content, idx) => {
+                    const sets = content.split('&');
+                    let result = [];
+                    let initFlag = true;
+                    let id = null;
+                    for (const s of sets) {
+                        const pa = s.substring(1);
+                        switch (s[0]) {
+                            case 'z':
+                                const pos = pa.indexOf('#');
+                                const _regex = getRegex(pa);
+                                const ret = [];
+                                for (const w of words) {
+                                    if (_regex.test(w)) {
+                                        ret.push(w[pos]);
+                                    }
+                                }
+                                if (initFlag) {
+                                    initFlag = false;
+                                    result = ret;
+                                } else {
+                                    result = result.filter(value => ret.includes(value));
+                                }
+                                break;
+                            case 'b':
+                                for (const c of pa) {
+                                    if (initFlag) {
+                                        initFlag = false;
+                                        result = conponentRev[c];
+                                    } else {
+                                        result = result.filter(
+                                            value =>
+                                                conponentRev[c].includes(value)
+                                        );
+                                    }
+                                }
+                                break;
+                            case 'h':
+                                const num = parseInt(pa);
+                                if (initFlag) {
+                                    initFlag = false;
+                                    result = ord[num];
+                                } else {
+                                    result = result.filter(value => ord[num].includes(value));
+                                }
+                                break;
+                            case 't':
+                                id = pa;
+                                break;
                         }
-                        if(initFlag) {
-                            initFlag = false;
-                            result = ret;
+                    }
+                    if (id) {
+                        if (usedID.includes(id)) {
+                            return '(\\k<' + id + '>)';
                         } else {
-                            result = result.filter(value => ret.includes(value));
+                            usedID.push(id);
+                            return '(?<' + id + '>' + (initFlag ? '.' : result.join('|')) + ')';
                         }
-                        break;
-                    case 'b':
-                        for(const c of pa) {
-                            if(initFlag) {
-                                initFlag = false;
-                                result = conponentRev[c];
-                            } else {
-                                result = result.filter(
-                                    value => 
-                                        conponentRev[c].includes(value)
-                                );
-                            }
-                        }
-                        break;
-                    case 'h':
-                        const num = parseInt(pa);
-                        result = ord[num];
-                        break;
+                    }
+                    return '(' + result.join('|') + ')';
+                }
+                let regex = '';
+                let idx = 0;
+                const len = pattern.length;
+                for (let i = 0; i < len; i++) {
+                    const c = pattern[i];
+                    if (pattern[i] == '{') {
+                        const end = pattern.indexOf('}', i);
+                        const content = pattern.substring(i + 1, end);
+                        const sets = getSet(content, idx);
+                        i = end;
+                        regex += sets;
+                    } else if (c === '#') {
+                        regex += '.';
+                    } else if (c === '*') {
+                        regex += '.+';
+                    } else {
+                        regex += c;
+                    }
+                    idx++;
+                }
+                return new RegExp('^' + regex + '$');
+            }
+            const pattern = $('#chinese-text').val().replace(/[\r\n]/g, '');
+            $('#chinese-text').val(pattern);
+            const regex = getRegex(pattern);
+            answer = "";
+            $('#answer').html("");
+            for (const w of words) {
+                if (regex.test(w)) {
+                    $('#answer').append(`<div>${w}</div>`);
                 }
             }
-            return '(' + result.join('|') + ')';
-        }
-        let regex = '';
-        const len = pattern.length;
-        for(let i = 0; i < len; i++) {
-            const c = pattern[i];
-            if(pattern[i] == '{') {
-                const end = pattern.indexOf('}', i);
-                const content = pattern.substring(i+1, end);
-                const sets = getSet(content);
-                i = end;
-                regex += sets;
-            } else if(c === '#') {
-                regex += '.';
-            } else if(c === '*') {
-                regex += '.*';
+        };
+
+        $('#chinese-btn').click(() => search());
+        $('#chinese-text').keydown((e) => { if (e.keyCode === 13) { e.preventDefault(); search(); } });
+
+        $('#toggle').click(() => {
+            const hint = $('#hint');
+            const table = $('#table');
+            if (hint.is(':visible')) {
+                hint.hide();
+                table.hide();
+                $('#toggle').text(' 点击显示提示 ');
+                localStorage.setItem('hide-hint', true);
             } else {
-                regex += c;
+                hint.show();
+                table.show();
+                $('#toggle').text(' 点击收起提示 ');
+                localStorage.removeItem('hide-hint');
             }
+        });
+
+        if (localStorage.getItem('hide-hint')) {
+            $('#toggle').click();
         }
-        const regexStr = '/^' + regex + '$/';
-        return eval(regexStr);
-    }
-    const pattern = $('#chinese-text').val().replace(/[\r\n]/g, '');
-    $('#chinese-text').val(pattern);
-    const regex = getRegex(pattern);
-    answer = "";
-    $('#answer').html("");
-    for(const w of words) {
-        if(regex.test(w)) {
-            $('#answer').append(`<div>${w}</div>`);
-        }
-    }
-};
+    </script>
 
-$('#chinese-btn').click(()=>search());
-$('#chinese-text').keydown((e) => {if(e.keyCode === 13) {search();}});
-
-
-
-        </script>
-        <div id="answer"></div>
-    </body>
+    <div id="answer"></div>
+</body>
 
 </html>
